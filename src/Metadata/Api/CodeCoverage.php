@@ -59,16 +59,14 @@ final class CodeCoverage
         $codeUnits = CodeUnitCollection::fromList();
         $mapper    = new Mapper;
 
-        foreach (Registry::parser()->forClassAndMethod($className, $methodName) as $metadata) {
+        foreach (Registry::parser()->forClass($className) as $metadata) {
             if (!$metadata->isCoversClass() && !$metadata->isCoversTrait() && !$metadata->isCoversMethod() && !$metadata->isCoversFunction()) {
                 continue;
             }
 
             assert($metadata instanceof CoversClass || $metadata instanceof CoversTrait || $metadata instanceof CoversMethod || $metadata instanceof CoversFunction);
 
-            if ($metadata->isCoversClass() || $metadata->isCoversTrait() || $metadata->isCoversMethod() || $metadata->isCoversFunction()) {
-                $codeUnits = $codeUnits->mergeWith($this->mapToCodeUnits($metadata));
-            }
+            $codeUnits = $codeUnits->mergeWith($this->mapToCodeUnits($metadata));
         }
 
         return $mapper->codeUnitsToSourceLines($codeUnits);
@@ -76,27 +74,24 @@ final class CodeCoverage
 
     /**
      * @psalm-param class-string $className
-     * @psalm-param non-empty-string $methodName
      *
      * @psalm-return array<string,list<int>>
      *
      * @throws CodeCoverageException
      */
-    public function linesToBeUsed(string $className, string $methodName): array
+    public function linesToBeUsed(string $className): array
     {
         $codeUnits = CodeUnitCollection::fromList();
         $mapper    = new Mapper;
 
-        foreach (Registry::parser()->forClassAndMethod($className, $methodName) as $metadata) {
+        foreach (Registry::parser()->forClass($className) as $metadata) {
             if (!$metadata->isUsesClass() && !$metadata->isUsesTrait() && !$metadata->isUsesMethod() && !$metadata->isUsesFunction()) {
                 continue;
             }
 
             assert($metadata instanceof UsesClass || $metadata instanceof UsesTrait || $metadata instanceof UsesMethod || $metadata instanceof UsesFunction);
 
-            if ($metadata->isUsesClass() || $metadata->isUsesTrait() || $metadata->isUsesMethod() || $metadata->isUsesFunction()) {
-                $codeUnits = $codeUnits->mergeWith($this->mapToCodeUnits($metadata));
-            }
+            $codeUnits = $codeUnits->mergeWith($this->mapToCodeUnits($metadata));
         }
 
         return $mapper->codeUnitsToSourceLines($codeUnits);
