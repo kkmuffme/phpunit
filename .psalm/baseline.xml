@@ -450,8 +450,6 @@
     <RedundantCondition>
       <code><![CDATA[$metadata instanceof CoversFunction]]></code>
       <code><![CDATA[$metadata instanceof UsesFunction]]></code>
-      <code><![CDATA[$metadata->isCoversFunction()]]></code>
-      <code><![CDATA[$metadata->isUsesFunction()]]></code>
     </RedundantCondition>
   </file>
   <file src="src/Metadata/Api/DataProvider.php">
